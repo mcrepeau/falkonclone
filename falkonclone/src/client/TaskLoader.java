@@ -24,10 +24,5 @@ public class TaskLoader {
 		return tasks;
 		
 	}
-	
-	public static void sendtoqueue(String task, AmazonSQS sqs){
-		
-		
-	}
 
 }

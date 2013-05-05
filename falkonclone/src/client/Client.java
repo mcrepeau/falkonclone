@@ -66,7 +66,7 @@ public static AmazonSQS initSQS(){
 		AmazonSQS sqs = initSQS(); //Initializes the queues and stuff from SQS
 		tasks = TaskLoader.loadfromFile(workloadfile); //Loads tasks into the queue
 		for (int i = 0; i == tasks.length; i++){
-			TaskLoader.sendtoqueue(tasks[i], sqs); //Loads every task in the file into the queue
+			QueueManager.sendToQueue(tasks[i], sqs); //Loads every task in the file into the queue
 		}
 		
 		while(true){
