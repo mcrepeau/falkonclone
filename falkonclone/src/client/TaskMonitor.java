@@ -17,7 +17,7 @@ public class TaskMonitor {
 		
 		// Lists the submitted tasks
         System.out.println("Listing the submitted tasks...\n");
-        ReceiveMessageRequest receiveMessageRequest_submitted = new ReceiveMessageRequest(Client.SubmittedTasksQueue);
+        ReceiveMessageRequest receiveMessageRequest_submitted = new ReceiveMessageRequest(QueueManager.SubmittedTasksQueue);
         List<Message> SubmittedTasks = sqs.receiveMessage(receiveMessageRequest_submitted).getMessages();
         for (Message message : SubmittedTasks) {
             
@@ -39,7 +39,7 @@ public class TaskMonitor {
         
      // Lists the tasks being processed
         System.out.println("Listing the tasks being processed...\n");
-        ReceiveMessageRequest receiveMessageRequest_inprocess = new ReceiveMessageRequest(Client.InprocessTaskQueue);
+        ReceiveMessageRequest receiveMessageRequest_inprocess = new ReceiveMessageRequest(QueueManager.InprocessTaskQueue);
         List<Message> InprocessTasks = sqs.receiveMessage(receiveMessageRequest_inprocess).getMessages();
         for (Message message : InprocessTasks) {
             
@@ -61,7 +61,7 @@ public class TaskMonitor {
         
      // Lists the completed tasks
         System.out.println("Listing the completed tasks...\n");
-        ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(Client.CompletedTasksQueue);
+        ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(QueueManager.CompletedTasksQueue);
         List<Message> messages = sqs.receiveMessage(receiveMessageRequest).getMessages();
         for (Message message : messages) {
             

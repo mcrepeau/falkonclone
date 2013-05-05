@@ -8,6 +8,10 @@ import com.amazonaws.services.sqs.AmazonSQSClient;
 
 public class Scheduler {
 	
+	static String SubmittedTasksQueue;
+	static String InprocessTaskQueue;
+	static String CompletedTasksQueue;
+	
 	static boolean USE_REMOTE_WORKERS = false;
 	static boolean USE_LOCAL_WORKERS = true;
 	static int REMOTE_WORKERS_MAX = 32;
