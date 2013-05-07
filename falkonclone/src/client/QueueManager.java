@@ -8,11 +8,12 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.CreateQueueRequest;
+import com.amazonaws.services.sqs.model.SendMessageRequest;
 
 public class QueueManager {
 	
 	static String SubmittedTasksQueue;
-	static String InprocessTaskQueue;
+	static String InprocessTasksQueue;
 	static String CompletedTasksQueue;
 	
 public static AmazonSQS initSQS(){
@@ -30,8 +31,8 @@ public static AmazonSQS initSQS(){
 			SubmittedTasksQueue = sqs.createQueue(createQueueRequest_submitted).getQueueUrl();
 
 			System.out.println("Creating a new queue for tasks being processed\n");
-			CreateQueueRequest createQueueRequest_inprocess = new CreateQueueRequest("InprocessTask");
-			InprocessTaskQueue = sqs.createQueue(createQueueRequest_inprocess).getQueueUrl();
+			CreateQueueRequest createQueueRequest_inprocess = new CreateQueueRequest("InprocessTasks");
+			InprocessTasksQueue = sqs.createQueue(createQueueRequest_inprocess).getQueueUrl();
 
 			System.out.println("Creating a new queue for completed tasks\n");
 			CreateQueueRequest createQueueRequest_completed = new CreateQueueRequest("CompletedTasks");
@@ -58,6 +59,8 @@ public static AmazonSQS initSQS(){
 	
 	public static void sendToQueue(String task, AmazonSQS sqs, String queue){
 		
+		sqs.sendMessage(new SendMessageRequest(queue, task));
+		System.out.println("task : "+task+" sent to : "+queue);
 		
 	}
 

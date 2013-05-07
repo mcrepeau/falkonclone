@@ -1,68 +1,50 @@
 package scheduler;
 
-import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.AmazonSQSClient;
+import com.amazonaws.services.sqs.model.Message;
 
 public class Scheduler {
 	
-	static String SubmittedTasksQueue;
-	static String InprocessTaskQueue;
-	static String CompletedTasksQueue;
-	
 	static boolean USE_REMOTE_WORKERS = false;
 	static boolean USE_LOCAL_WORKERS = true;
-	static int REMOTE_WORKERS_MAX = 32;
-	static int LOCAL_WORKERS_MAX = 5;
-	static int NB_REMOTE_WORKERS = 0;
-
+	
 	public static void main(String[] args) {
 		
-		boolean areSubmittedTasksWaiting;
 		boolean areWorkersAvailable;
+		Message message;
 		
-		if (args[2] == "-rw"){
+		if (args[0] == "-rw"){
 			USE_REMOTE_WORKERS = true;
 			USE_LOCAL_WORKERS = false;
-			REMOTE_WORKERS_MAX = Integer.parseInt(args[3]);
+			Workers.REMOTE_WORKERS_MAX = Integer.parseInt(args[3]);
+			System.out.println("Use of remote workers");
 		}
-		else if (args[2] == "-lw"){
+		else if (args[0] == "-lw"){
 			USE_REMOTE_WORKERS = false;
 			USE_LOCAL_WORKERS = true;
-			LOCAL_WORKERS_MAX = Integer.parseInt(args[3]);
+			Workers.LOCAL_WORKERS_MAX = Integer.parseInt(args[3]);
+			System.out.println("Use of local workers");
 		}
 		
 		AmazonSQS sqs = QueueManager.initSQS(); //Initializes the queues and stuff from SQS
 		
 		while(true){
-			areSubmittedTasksWaiting = QueueManager.checkifTaskWaiting(sqs); //Checks queue
-			while (areSubmittedTasksWaiting == false){
-				areWorkersAvailable = Workers.checkifAvailable();//Check workers
-				if (areWorkersAvailable){
-					//Send task to first worker available
-					//Remove task from submitted queue
-					//Put task in inprocess queue
-				}
+			while ((message = QueueManager.getNextMessage(sqs)) != null){
 				if(USE_REMOTE_WORKERS){
-					if (NB_REMOTE_WORKERS < REMOTE_WORKERS_MAX){
-						//Create worker and wait for creation
-						
-						NB_REMOTE_WORKERS++;
-						//Send task
+					areWorkersAvailable = Workers.checkifAvailable();//Check workers
+					if (areWorkersAvailable == false && (Workers.NB_REMOTE_WORKERS < Workers.REMOTE_WORKERS_MAX)){
+						Workers.createWorker(); //Create worker and wait for creation	
 					}
-					else {
-						//Send task to first worker available
-					}
-					//Send task
-					//Remove task from submitted queue
-					//Put task in inprocess queue
+					QueueManager.removeTaskfromQueue(sqs, QueueManager.SubmittedTasksQueue, message);//Remove task from submitted queue
+					QueueManager.putTaskinQueue(sqs, QueueManager.InprocessTasksQueue, message);//Put task in inprocess queue
+					TaskSender.sendTask(Workers.getAvailableWorker(), message.getBody());//Send task
+					System.out.println("Task sent to the worker");
 				}
 				if(USE_LOCAL_WORKERS){
-					Workers.work(QueueManager.getNextTask(sqs)); //Fetches task and instanciate worker with task
-					QueueManager.removeTaskfromQueue(sqs, "");//Remove task from submitted queue
-					QueueManager.putTaskinQueue(sqs, "");//Put task in inprocess queue
+					QueueManager.removeTaskfromQueue(sqs, QueueManager.SubmittedTasksQueue, message);//Remove task from submitted queue
+					QueueManager.putTaskinQueue(sqs, QueueManager.InprocessTasksQueue, message);//Put task in inprocess queue
+					Workers.work(sqs,message); //Fetches message and instantiate worker with task
+					
 				}	
 			}
 		}
