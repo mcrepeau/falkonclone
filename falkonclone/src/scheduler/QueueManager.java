@@ -13,9 +13,9 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 
 public class QueueManager {
 	
-	public static String SubmittedTasksQueue = "https://sqs.us-east-1.amazonaws.com/163663512558/SubmittedTasks";
-	public static String InprocessTasksQueue = "https://sqs.us-east-1.amazonaws.com/163663512558/InprocessTasks";
-	public static String CompletedTasksQueue = "https://sqs.us-east-1.amazonaws.com/163663512558/CompletedTasks";
+	public static String SubmittedTasksQueue = "https://sqs.us-east-1.amazonaws.com/957925617529/SubmittedTasks";
+	public static String InprocessTasksQueue = "https://sqs.us-east-1.amazonaws.com/957925617529/InprocessTasks";
+	public static String CompletedTasksQueue = "https://sqs.us-east-1.amazonaws.com/957925617529/CompletedTasks";
 	
 	public static AmazonSQS initSQS(){
 			

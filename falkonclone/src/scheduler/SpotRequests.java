@@ -35,7 +35,7 @@ import com.amazonaws.services.ec2.model.SpotInstanceRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 
 public class SpotRequests {
-    private AmazonEC2      ec2;
+    private AmazonEC2 ec2;
     private ArrayList<String> instanceIds;
     private ArrayList<String> spotInstanceRequestIds;
 
@@ -90,7 +90,7 @@ public class SpotRequests {
     	// and the latest Amazon Linux AMI id available. Note, you should always use the latest
     	// Amazon Linux AMI id or another of your choosing.
     	LaunchSpecification launchSpecification = new LaunchSpecification();
-    	launchSpecification.setImageId("ami-4ac9437a");
+    	launchSpecification.setImageId("ami-bdbdd1d4");
     	launchSpecification.setInstanceType("t1.micro");
 
     	// Add the security group to the request.
