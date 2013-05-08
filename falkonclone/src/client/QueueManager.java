@@ -20,8 +20,8 @@ public static AmazonSQS initSQS(){
 		
 		//Connects to Amazon AWS
 		AmazonSQS sqs = new AmazonSQSClient(new ClasspathPropertiesFileCredentialsProvider());
-		Region usWest2 = Region.getRegion(Regions.US_WEST_2);
-		sqs.setRegion(usWest2);
+		Region usEast1 = Region.getRegion(Regions.US_EAST_1);
+		sqs.setRegion(usEast1);
 
 		try {
 			// Creates the queues (something should be added in case the queue already exists

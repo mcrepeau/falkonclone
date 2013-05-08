@@ -13,16 +13,16 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 
 public class QueueManager {
 	
-	static String SubmittedTasksQueue = "https://sqs.us-west-2.amazonaws.com/957925617529/SubmittedTasks";
-	static String InprocessTasksQueue = "https://sqs.us-west-2.amazonaws.com/957925617529/InprocessTasks";
-	static String CompletedTasksQueue = "https://sqs.us-west-2.amazonaws.com/957925617529/CompletedTasks";
+	public static String SubmittedTasksQueue = "https://sqs.us-east-1.amazonaws.com/163663512558/SubmittedTasks";
+	public static String InprocessTasksQueue = "https://sqs.us-east-1.amazonaws.com/163663512558/InprocessTasks";
+	public static String CompletedTasksQueue = "https://sqs.us-east-1.amazonaws.com/163663512558/CompletedTasks";
 	
 	public static AmazonSQS initSQS(){
 			
 			//Connects to Amazon AWS
 			AmazonSQS sqs = new AmazonSQSClient(new ClasspathPropertiesFileCredentialsProvider());
-			Region usWest2 = Region.getRegion(Regions.US_WEST_2);
-			sqs.setRegion(usWest2);
+			Region usEast1 = Region.getRegion(Regions.US_EAST_1);
+			sqs.setRegion(usEast1);
 			
 			return sqs;		
 			
@@ -38,7 +38,7 @@ public class QueueManager {
         		return message;
         	}
         }
-        System.out.println("No task to be executed...\n");
+        System.out.println("No more tasks to process...\n");
 		return null;
 	}
 	
